@@ -1,50 +1,48 @@
 # IvanCornelius FilesChecksum
 
-**English** | [Русский](README.ru.md)
+Консольное приложение на C++, созданное с использованием фреймворка Qt, которое вычисляет MD5 контрольные суммы для всех файлов в указанном каталоге и его подкаталогах. Приложение предназначено для работы в операционных системах Windows и Linux.
 
-A C++ console application built with the Qt framework that calculates MD5 checksums for all files in a specified directory and its subdirectories. The application is designed to run on both Windows and Linux operating systems.
+## Возможности
 
-## Features
+*   **Многопоточная обработка:** Вычисляет контрольные суммы для нескольких файлов одновременно с использованием отдельных потоков.
+*   **Две реализации синхронизации:** Предоставляет две различные версии приложения, демонстрирующие разные техники синхронизации потоков:
+    *   **На основе мьютексов (Mutex):** Использует `QMutex` для защиты общих данных.
+    *   **На основе сигналов/слотов (Signals/Slots):** Использует механизм сигналов и слотов Qt для потокобезопасного взаимодействия.
+*   **Рекурсивный обход каталогов:** Сканирует все файлы в указанном стартовом каталоге и его подкаталогах.
+*   **Алфавитный вывод:** Выводит полный путь к файлу и соответствующую ему MD5 контрольную сумму в алфавитном порядке.
+*   **Обработка ошибок:** Корректно обрабатывает файлы и каталоги, доступ к которым невозможен из-за ограничений прав.
+*   **Кросс-платформенность:** Совместимо с Windows и Linux.
 
-*   **Multi-threaded Processing:** Calculates checksums for multiple files simultaneously using separate threads.
-*   **Two Synchronization Implementations:** Provides two distinct versions of the application demonstrating different thread synchronization techniques:
-    *   **Mutex-based:** Uses `QMutex` to protect shared data.
-    *   **Signals/Slots-based:** Uses Qt's signal/slot mechanism for thread-safe communication.
-*   **Recursive Directory Traversal:** Scans all files within the specified starting directory and its subdirectories.
-*   **Alphabetical Output:** Prints the full file path and its corresponding MD5 checksum in alphabetical order.
-*   **Error Handling:** Gracefully handles files and directories that cannot be accessed due to permission issues.
-*   **Cross-platform:** Compatible with Windows and Linux.
+## Пример работы
 
-## Example
+![Пример работы программы](docs/Example.png)
 
-![Example of program execution](docs/Example.png)
+## Использование
 
-## Usage
+Запустите приложение из командной строки, указав путь к стартовому каталогу в качестве аргумента.
 
-Run the application from the command line, providing the path to the starting directory as an argument.
+./IvanCornelius_FilesChecksum /путь/к/вашему/каталогу
 
-./IvanCornelius_FilesChecksum /path/to/your/directory
-
-**Example Output:**
-/path/to/your/directory/file1.txt  d41d8cd98f00b204e9800998ecf8427e
-/path/to/your/directory/subdir/file2.pdf  a1b2c3d4e5f678901234567890abcdef
+**Пример вывода:**
+/путь/к/вашему/каталогу/файл1.txt  d41d8cd98f00b204e9800998ecf8427e
+/путь/к/вашему/каталогу/подкаталог/файл2.pdf  a1b2c3d4e5f678901234567890abcdef
 ...
 
-## Key Implementation Details
+## Основные детали реализации
 
-*   **Mutex Version:** Source code can be found in ([src/IvanCornelius_FC_Mutex](src/IvanCornelius_FC_Mutex)). Worker threads inherit from `QThread`. They directly access a shared `QMap` of results, protected by a `QMutex`. The main thread manages a pool of worker threads.
-*   **Signals/Slots Version:** Source code can be found in ([src/IvanCornelius_FC_SignalsSlots](src/IvanCornelius_FC_SignalsSlots)). Worker objects inherit from `QObject` and live in separate threads (`QThread`). Communication (sending results, errors, finished signals) is done exclusively through Qt's signals and slots, which are thread-safe when connected with `Qt::QueuedConnection` (the default for cross-thread connections).
+*   **Версия с мьютексом:** Исходный код доступен в ([src/IvanCornelius_FC_Mutex](src/IvanCornelius_FC_Mutex)). Рабочие потоки наследуются от `QThread`. Они напрямую обращаются к общему `QMap` с результатами, защищенному `QMutex`. Главный поток управляет пулом рабочих потоков.
+*   **Версия с сигналами/слотами:** Исходный код доступен в ([src/IvanCornelius_FC_SignalsSlots](src/IvanCornelius_FC_SignalsSlots)). Рабочие объекты наследуются от `QObject` и живут в отдельных потоках (`QThread`). Взаимодействие (отправка результатов, ошибок, сигналов завершения) осуществляется исключительно через сигналы и слоты Qt, которые являются потокобезопасными при соединении с типом `Qt::QueuedConnection` (используется по умолчанию для межпоточных соединений).
 
-## Pre-built Executables
+## Готовые исполняемые файлы
 
-Ready-to-use Windows executables are available for both versions:
-*   Mutex-based version: ([releases/IvanCornelius_FC_Mutex_Windows](releases/IvanCornelius_FC_Mutex_Windows))
-*   Signals/Slots-based version: ([releases/IvanCornelius_FC_SignalsSlots_Windows](releases/IvanCornelius_FC_SignalsSlots_Windows))
+Готовые исполняемые файлы для Windows доступны для обеих версий:
+*   Версия с мьютексом: ([releases/IvanCornelius_FC_Mutex_Windows](releases/IvanCornelius_FC_Mutex_Windows))
+*   Версия с сигналами/слотами: ([releases/IvanCornelius_FC_SignalsSlots_Windows](releases/IvanCornelius_FC_SignalsSlots_Windows))
 
-## Technical Specification
+## Техническое задание
 
-You can review the original technical requirements in ([docs/technical_specification.ru.txt](docs/technical_specification.ru.txt)) (in Russian).
+С оригинальным техническим заданием можно ознакомиться в ([docs/technical_specification.ru.txt](docs/technical_specification.ru.txt)).
 
-## License
+## Лицензия
 
-This project is licensed under the MIT License. See the license in ([LICENSE](LICENSE)) or in Russian ([LICENSE.ru.md](LICENSE.ru.md)).
+Этот проект распространяется под лицензией MIT. С лицензией можно ознакомиться на английском ([LICENSE](LICENSE)) или на русском ([LICENSE.ru.md](LICENSE.ru.md)).
