@@ -98,7 +98,7 @@ void IvanCornelius_FilesChecksum::scanDirectory()
 }
 
 
-
+// СОЗДАНИЕ НОВЫХ ЗАДАЧ РАСЧЁТА КОНТРОЛЬНЫХ СУММ ФАЙЛОВ
 void IvanCornelius_FilesChecksum::processFiles()
 {
     /// Индекс текущего файла
